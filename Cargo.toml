@@ -1,0 +1,17 @@
+[package]
+name = "agent-citation"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "WHERE-layer structured citations for AI agent outputs: attach, validate, and audit source pointers."
+keywords = ["llm", "agents", "ai", "citation", "rag"]
+categories = ["text-processing", "development-tools::debugging"]
+repository = "https://github.com/MukundaKatta/agent-citation-rs"
+readme = "README.md"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]
+tempfile = "3"
