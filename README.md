@@ -1,5 +1,8 @@
 # agent-citation
 
+[![CI](https://github.com/MukundaKatta/agent-citation-rs/actions/workflows/ci.yml/badge.svg)](https://github.com/MukundaKatta/agent-citation-rs/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 WHERE-layer structured citations for AI agent outputs.
 
 Given an LLM-generated answer with bracketed markers like `[1]`, `[2, 3]`, this crate lets you:
@@ -86,6 +89,48 @@ impl Sink for CountingSink {
     }
 }
 ```
+
+## Marker syntax
+
+`validate` and the underlying `attribute` parser recognize bracketed numeric
+markers only:
+
+- `[1]` -- a single citation marker.
+- `[1, 2]` -- a group; expands to markers `1` and `2`, both pointing at the same
+  text span.
+- `[12]`, `[101]` -- multi-digit ids are fine.
+
+Anything that is not a comma-separated list of digits is ignored, so prose like
+`[Appendix A]`, empty brackets `[]`, and unclosed `[1` are left untouched.
+Repeated markers (`[1] ... [1]`) are de-duplicated when computing coverage.
+
+## API at a glance
+
+| Item | Purpose |
+| --- | --- |
+| `Citation::new(id, source_uri)` | Build a validated citation (rejects blank id / uri). |
+| `.with_span` / `.with_page` / `.with_confidence` / `.with_metadata` | Builder methods for optional fields (confidence must be in `[0.0, 1.0]`). |
+| `validate(text, &citations) -> ValidationReport` | Structurally check markers against citations. |
+| `ValidationReport::is_clean()` / `as_markdown()` | Inspect or render the result. |
+| `CitationStore::new()` | Capture turns into the default in-memory sink. |
+| `CitationStore::with_sink(Box<dyn Sink>)` | Capture turns into a custom backend. |
+| `store.attach(turn_id, text, citations)` | Record one agent turn. |
+| `store.export()` / `store.render_text_summary()` | Read captured turns back as JSON or a text digest. |
+| `InMemorySink`, `JsonlSink`, `Sink` | Built-in and pluggable sinks. |
+
+`ValidationReport` carries `facts_with_citations`, `facts_missing_citations`,
+`dangling_citation_ids`, `duplicate_citation_ids`, `coverage_ratio`, and
+`markers_in_order`.
+
+## Development
+
+```sh
+cargo test                 # unit, integration, and doc tests
+cargo fmt --all -- --check  # formatting
+cargo clippy --all-targets -- -D warnings
+```
+
+CI runs the same checks on every push and pull request.
 
 ## License
 

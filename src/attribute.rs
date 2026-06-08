@@ -59,11 +59,7 @@ pub fn attribute(text: &str) -> Vec<Marker> {
         let end = j + 1;
         for id in ids {
             if !id.is_empty() {
-                out.push(Marker {
-                    id,
-                    start,
-                    end,
-                });
+                out.push(Marker { id, start, end });
             }
         }
         i = end;

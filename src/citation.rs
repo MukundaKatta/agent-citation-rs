@@ -41,7 +41,10 @@ impl std::fmt::Display for CitationError {
 impl std::error::Error for CitationError {}
 
 impl Citation {
-    pub fn new(id: impl Into<String>, source_uri: impl Into<String>) -> Result<Self, CitationError> {
+    pub fn new(
+        id: impl Into<String>,
+        source_uri: impl Into<String>,
+    ) -> Result<Self, CitationError> {
         let c = Citation {
             id: id.into(),
             source_uri: source_uri.into(),
@@ -72,7 +75,11 @@ impl Citation {
         Ok(self)
     }
 
-    pub fn with_metadata(mut self, key: impl Into<String>, value: impl Into<serde_json::Value>) -> Self {
+    pub fn with_metadata(
+        mut self,
+        key: impl Into<String>,
+        value: impl Into<serde_json::Value>,
+    ) -> Self {
         self.metadata.insert(key.into(), value.into());
         self
     }
@@ -122,9 +129,7 @@ impl Citation {
     }
 
     pub fn from_json_value(value: &serde_json::Value) -> Result<Self, CitationError> {
-        let obj = value
-            .as_object()
-            .ok_or(CitationError::BlankSourceUri)?;
+        let obj = value.as_object().ok_or(CitationError::BlankSourceUri)?;
         let id = obj
             .get("id")
             .and_then(|v| v.as_str())
@@ -135,7 +140,10 @@ impl Citation {
             .and_then(|v| v.as_str())
             .unwrap_or("")
             .to_string();
-        let span = obj.get("span").and_then(|v| v.as_str()).map(|s| s.to_string());
+        let span = obj
+            .get("span")
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string());
         let page = obj.get("page").and_then(|v| v.as_u64()).map(|p| p as u32);
         let confidence = obj.get("confidence").and_then(|v| v.as_f64());
         let metadata: BTreeMap<String, serde_json::Value> = obj

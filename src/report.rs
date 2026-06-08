@@ -42,10 +42,7 @@ impl ValidationReport {
             "- Facts missing citations: **{}**",
             self.facts_missing_citations
         ));
-        lines.push(format!(
-            "- Coverage ratio: **{:.2}**",
-            self.coverage_ratio
-        ));
+        lines.push(format!("- Coverage ratio: **{:.2}**", self.coverage_ratio));
         if !self.dangling_citation_ids.is_empty() {
             lines.push(format!(
                 "- Dangling citation ids: `{}`",
