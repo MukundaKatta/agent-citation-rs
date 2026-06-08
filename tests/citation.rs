@@ -63,5 +63,8 @@ fn metadata_roundtrip_preserves_arbitrary_json() {
         .with_metadata("nested", serde_json::json!({"k": [1, 2, 3]}));
     let v = c.to_json_value();
     let back = Citation::from_json_value(&v).unwrap();
-    assert_eq!(back.metadata.get("nested"), Some(&serde_json::json!({"k": [1, 2, 3]})));
+    assert_eq!(
+        back.metadata.get("nested"),
+        Some(&serde_json::json!({"k": [1, 2, 3]}))
+    );
 }

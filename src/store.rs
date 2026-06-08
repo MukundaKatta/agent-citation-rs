@@ -148,7 +148,8 @@ impl Sink for JsonlSink {
             .map_err(|e| StoreError::Io(e.to_string()))?;
         fh.write_all(payload.as_bytes())
             .map_err(|e| StoreError::Io(e.to_string()))?;
-        fh.write_all(b"\n").map_err(|e| StoreError::Io(e.to_string()))?;
+        fh.write_all(b"\n")
+            .map_err(|e| StoreError::Io(e.to_string()))?;
         Ok(())
     }
 
@@ -177,10 +178,7 @@ impl Sink for JsonlSink {
                 .and_then(|x| x.as_str())
                 .unwrap_or("")
                 .to_string();
-            let captured_at = v
-                .get("captured_at")
-                .and_then(|x| x.as_f64())
-                .unwrap_or(0.0);
+            let captured_at = v.get("captured_at").and_then(|x| x.as_f64()).unwrap_or(0.0);
             let citations: Vec<Citation> = v
                 .get("citations")
                 .and_then(|x| x.as_array())

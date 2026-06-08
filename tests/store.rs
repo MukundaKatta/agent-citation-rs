@@ -17,9 +17,7 @@ fn attach_and_export_roundtrip() {
         .attach(
             "turn_1",
             "A [1].",
-            vec![Citation::new("1", "docs://a")
-                .unwrap()
-                .with_span("A fact")],
+            vec![Citation::new("1", "docs://a").unwrap().with_span("A fact")],
         )
         .unwrap();
     let out = store.export().unwrap();
@@ -119,10 +117,18 @@ fn jsonl_sink_appends_across_calls() {
     let sink = JsonlSink::new(&path).unwrap();
     let store = CitationStore::with_sink(Box::new(sink));
     store
-        .attach("t1", "A [1].", vec![Citation::new("1", "docs://a").unwrap()])
+        .attach(
+            "t1",
+            "A [1].",
+            vec![Citation::new("1", "docs://a").unwrap()],
+        )
         .unwrap();
     store
-        .attach("t2", "B [2].", vec![Citation::new("2", "docs://b").unwrap()])
+        .attach(
+            "t2",
+            "B [2].",
+            vec![Citation::new("2", "docs://b").unwrap()],
+        )
         .unwrap();
     let sink2 = JsonlSink::new(&path).unwrap();
     let records = sink2.read_all().unwrap();
@@ -145,7 +151,11 @@ fn jsonl_sink_creates_parent_dirs() {
     let sink = JsonlSink::new(&path).unwrap();
     let store = CitationStore::with_sink(Box::new(sink));
     store
-        .attach("t1", "A [1].", vec![Citation::new("1", "docs://a").unwrap()])
+        .attach(
+            "t1",
+            "A [1].",
+            vec![Citation::new("1", "docs://a").unwrap()],
+        )
         .unwrap();
     assert!(path.exists());
 }
@@ -158,7 +168,11 @@ fn jsonl_sink_skips_blank_lines() {
     let sink = JsonlSink::new(&path).unwrap();
     let store = CitationStore::with_sink(Box::new(sink));
     store
-        .attach("t1", "A [1].", vec![Citation::new("1", "docs://a").unwrap()])
+        .attach(
+            "t1",
+            "A [1].",
+            vec![Citation::new("1", "docs://a").unwrap()],
+        )
         .unwrap();
     let mut fh = std::fs::OpenOptions::new()
         .append(true)
@@ -200,10 +214,18 @@ fn custom_sink_trait_works() {
     };
     let store = CitationStore::with_sink(Box::new(sink));
     store
-        .attach("t1", "A [1].", vec![Citation::new("1", "docs://a").unwrap()])
+        .attach(
+            "t1",
+            "A [1].",
+            vec![Citation::new("1", "docs://a").unwrap()],
+        )
         .unwrap();
     store
-        .attach("t2", "B [2].", vec![Citation::new("2", "docs://b").unwrap()])
+        .attach(
+            "t2",
+            "B [2].",
+            vec![Citation::new("2", "docs://b").unwrap()],
+        )
         .unwrap();
     let snap = shared.lock().unwrap();
     assert_eq!(snap.len(), 2);
